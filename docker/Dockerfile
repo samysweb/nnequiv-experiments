@@ -30,16 +30,6 @@ RUN mkdir /benchmarking
 
 WORKDIR /benchmarking
 
-# Temci Setup
-RUN apt install -y time python3-pandas python3-cffi python3-cairo python3-cairocffi python3-matplotlib python3-numpy python3-scipy linux-perf
-RUN pip install git+https://github.com/parttimenerd/temci.git
-#RUN echo "deb http://deb.debian.org/debian stretch main" >> /etc/apt/sources.list
-#RUN apt update && apt install linux-tools-generic
-
-
-RUN temci setup
-ADD ./run_config.yaml /run_config.yaml
-
 # Runlim
 RUN curl http://fmv.jku.at/runlim/runlim-1.10.tar.gz > runlim.tar.gz && mkdir /runlim && tar -xzvf runlim.tar.gz -C /runlim && rm -f runlim.tar.gz && cd /runlim/runlim-1.10 && ./configure.sh && make && cd ../../
 
@@ -47,11 +37,18 @@ RUN curl http://fmv.jku.at/runlim/runlim-1.10.tar.gz > runlim.tar.gz && mkdir /r
 ADD ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt && rm -f /requirements.txt
 
+# Temci
+RUN apt install -y time python3-pandas python3-cffi python3-cairo python3-cairocffi python3-matplotlib python3-numpy python3-scipy linux-perf
+RUN pip install git+https://github.com/parttimenerd/temci.git
+RUN temci setup
+RUN apt install sudo
+ADD ./run_config.yaml /run_config.yaml
+
 RUN mkdir /scripts
 ADD ./scripts/run-all.sh /scripts/run-all.sh
 ENV PATH="$PATH:/scripts:/runlim/runlim-1.10:"
 
-RUN mkdir -p /root/.ssh/
+RUN mkdir -p /home/bench/.ssh/
 ADD ./ssh /root/.ssh
 
-ENTRYPOINT [ "temci","short","shell", "--settings", "/run_config.yaml" ]
+ENTRYPOINT [ "temci","short","shell", "--sudo", "--settings", "/run_config.yaml" ]
