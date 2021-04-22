@@ -1,7 +1,10 @@
-version: "3.5"
+version: "2.4"
 
 services:
   benchmarking:
     build: ./docker
+    privileged: true
+    cap_add:
+      - ALL
     volumes:
       - ./:/benchmarking
