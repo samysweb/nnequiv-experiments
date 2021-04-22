@@ -1,0 +1,27 @@
+  - 
+    
+    # Optional attributes that describe the block
+    attributes:
+        
+        description: 'ReluDiff'
+        
+        # Tags of this block
+        tags: [] 
+    
+    run_config:
+
+        no_build: true
+
+        # Execution directories for each command
+        cwd: /benchmarking
+        
+        # Disable the address space layout randomization
+        disable_aslr: true
+        
+        preset: usable
+        
+        cpuset:
+            active: true
+            base_core_number: 1
+            parallel: 0
+            sub_core_number: 3
