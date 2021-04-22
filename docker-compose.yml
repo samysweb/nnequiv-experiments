@@ -1,0 +1,7 @@
+version: "3.5"
+
+services:
+  benchmarking:
+    build: ./docker
+    volumes:
+      - ./:/benchmarking
