@@ -5,10 +5,10 @@ TMPDIR=/tmp/experiment
 INSTANCES=instances.csv
 
 # How often are benchmarks run?
-RUN_COUNT=3
+RUN_COUNT=1
 
 # NNEquiv Commit
-NNEQUIV_COMMIT="0dc7bc0"
+NNEQUIV_COMMIT="91e04fe"
 
-TO=3600
+TO=10800
 MO=4096

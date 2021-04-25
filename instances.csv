@@ -1,0 +1,4 @@
+ACASXU_run2a_1_1_batch_2000-trunc,1010,0.05
+ACASXU_run2a_1_2_batch_2000-trunc,1010,0.05
+HAR-trunc,1000,0.25
+mnist_relu_3_100-trunc,400,0.25

@@ -28,7 +28,7 @@ machine_info(){
 	} > $1 2>&1
 }
 
-# run_nnequiv resultDirOverall inputFile1 inputFile2
+# run_nnequiv resultDirOverall inputFile1 inputFile2 property epsilon
 run_nnequiv(){
 	cd $EXPERIMENT_DIR
 	# Check if files exist
@@ -58,7 +58,7 @@ run_nnequiv(){
 	
 	{
 		cd $nnequiv_outDir
-		runlim -r $TO -s $MO python $NNEQUIVPATH/examples/equiv/test.py $nnequiv_input1 $nnequiv_input2
+		runlim -r $TO -s $MO python $NNEQUIVPATH/examples/equiv/test.py $nnequiv_input1 $nnequiv_input2 $4 $5
 	} > $nnequiv_outDir/stdout.log 2> $nnequiv_outDir/stderr.log
 	cp $nnequiv_outDir/* $nnequiv_resultDir
 	chmod -R a+rwx $nnequiv_resultDir
@@ -75,7 +75,7 @@ exec_bench(){
 
 	for ((num=1;num<=RUN_COUNT;num++)); do
 		echo "Run $num"
-		run_nnequiv "$resultDirOverall/$num" $inputFile1 $inputFile2
+		run_nnequiv "$resultDirOverall/$num" $inputFile1 $inputFile2 $2 $3
 	done
 	chmod -R a+rwx $resultDirOverall
 }
