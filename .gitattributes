@@ -1,3 +1,11 @@
+*.log filter=lfs diff=lfs merge=lfs -text
 **/*.log filter=lfs diff=lfs merge=lfs -text
+results/ACASXU_run2a_1_1_batch_2000-trunc filter=lfs diff=lfs merge=lfs -text
+results/ACASXU_run2a_1_2_batch_2000-trunc filter=lfs diff=lfs merge=lfs -text
+results/HAR-trunc filter=lfs diff=lfs merge=lfs -text
+results/mnist_relu_3_100-trunc filter=lfs diff=lfs merge=lfs -text
+results/README.md filter=lfs diff=lfs merge=lfs -text
+results/ACASXU_run2a_1_1_batch_2000-trunc/1/nnequiv-3f00a06/ filter=lfs diff=lfs merge=lfs -text
+results/ACASXU_run2a_1_2_batch_2000-trunc/1/nnequiv-3f00a06/ filter=lfs diff=lfs merge=lfs -text
 results/ACASXU_run2a_1_1_batch_2000-trunc/1/nnequiv-3f00a06 filter=lfs diff=lfs merge=lfs -text
 results/ACASXU_run2a_1_2_batch_2000-trunc/1/nnequiv-3f00a06 filter=lfs diff=lfs merge=lfs -text
