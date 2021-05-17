@@ -1,6 +1,9 @@
 import fileinput
 import json
 import re
+from ast import literal_eval
+
+import numpy as np
 
 class LineHandler:
     def __init__(self,name,run):
@@ -18,9 +21,59 @@ class DepthLine(LineHandler):
 
     def handle(self,line):
         if line.startswith("[VALID_DEPTH]"):
-            self.valid_depth=json.loads(line[14:])
+            self.valid_depth=self.parseList(line[14:])
         if line.startswith("[INVALID_DEPTH]"):
-            self.invalid_depth=json.loads(line[16:])
+            self.invalid_depth=self.parseList(line[16:])
+    def parseList(self, str):
+        rv = []
+        strcache=""
+        active=False
+        for x in str:
+            if x=='[':
+                active=True
+            elif active:
+                if x.isdigit():
+                    strcache+=x
+                elif x==',' and len(strcache)>0:
+                    rv.append(int(strcache))
+                    strcache=""
+        return np.array(rv)
+
+class DepthOffsetLine(LineHandler):
+    def __init__(self,run):
+        super().__init__("depth_offset",run)
+        self.valid_depth=[]
+        self.invalid_depth=[]
+
+    def handle(self,line):
+        if line.startswith("[VALID_DEPTH_DECISION]"):
+            print("Handling depth_offset (may take some time)",flush=True)
+            self.valid_depth=self.parseList(line[23:])
+        if line.startswith("[INVALID_DEPTH_DECISION]"):
+            print("Handling depth_offset (may take some time)",flush=True)
+            print(line[24:100])
+            self.invalid_depth=self.parseList(line[25:])
+    def parseList(self, str):
+        rv = []
+        tuplecache=[]
+        strcache=""
+        active=False
+        for x in str:
+            if x=='[':
+                active=True
+            elif active:
+                if x.isdigit() or x=='.':
+                    strcache+=x
+                elif x==',' and len(strcache)>0:
+                    tuplecache.append(float(strcache))
+                    strcache=""
+                elif x==')':
+                    tuplecache.append(int(strcache))
+                    rv.append((tuplecache[0],tuplecache[1]))
+                    strcache=""
+                    tuplecache=[]
+        return np.array(rv)
+                
         
 
 class EquivLine(LineHandler):
@@ -63,7 +116,7 @@ class RunLim(LineHandler):
         
 
 class BenchmarkRun:
-    OUT_HANDLERS = [DepthLine, EquivLine]
+    OUT_HANDLERS = [DepthLine, EquivLine, DepthOffsetLine]
     ERR_HANDLERS = [RunLim]
     def __init__(self, stdout, stderr):
         self.stdout_handlers = []
