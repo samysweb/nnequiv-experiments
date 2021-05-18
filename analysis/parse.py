@@ -84,9 +84,24 @@ class EquivLine(LineHandler):
 
     def handle(self,line):
         if line.startswith("[EQUIV]"):
-            self.equiv.append(float(line[8:]))
+            try:
+                self.equiv.append(float(line[8:]))
+            except ValueError:
+                pass
         if line.startswith("[NEQUIV]"):
             self.nonequiv.append(float(line[9:]))
+
+class EquivSummarizesLine(LineHandler):
+    def __init__(self,run):
+        super().__init__("equiv_summarization",run)
+        self.summarized=[]
+
+    def handle(self,line):
+        if line.startswith("[EQUIV_SUMMARIZES]"):
+            try:
+                self.summarized.append(int(line[19:]))
+            except ValueError:
+                pass
 
 class RunLim(LineHandler):
     def __init__(self,run):
@@ -118,12 +133,12 @@ class RunLim(LineHandler):
 class BenchmarkRun:
     OUT_HANDLERS = [DepthLine, EquivLine, DepthOffsetLine]
     ERR_HANDLERS = [RunLim]
-    def __init__(self, stdout, stderr):
+    def __init__(self, stdout, stderr, out_handlers=OUT_HANDLERS, err_handlers=ERR_HANDLERS):
         self.stdout_handlers = []
         self.stderr_handlers = []
-        for h in BenchmarkRun.OUT_HANDLERS:
+        for h in out_handlers:
             self.stdout_handlers.append(h(self))
-        for h in BenchmarkRun.ERR_HANDLERS:
+        for h in err_handlers:
             self.stderr_handlers.append(h(self))
         self.process(stdout,self.stdout_handlers)
         self.process(stderr,self.stderr_handlers)
