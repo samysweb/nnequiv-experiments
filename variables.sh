@@ -8,7 +8,7 @@ INSTANCES=instances.csv
 RUN_COUNT=1
 
 # NNEquiv Commit
-NNEQUIV_COMMIT="c5c8f02"
+NNEQUIV_COMMIT="b0d941b"
 
 TO=10800
 MO=4096
