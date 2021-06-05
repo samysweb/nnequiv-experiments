@@ -10,7 +10,7 @@ INSTANCES_BUENING=instances-buening.csv
 RUN_COUNT=1
 
 # NNEquiv Commit
-NNEQUIV_COMMIT="e96d93b"
+NNEQUIV_COMMIT="48e7b4a"
 BUENING_COMMIT="a5c91be"
 
 TO=32400 # 9h per instance due to intense computations...
