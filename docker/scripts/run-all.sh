@@ -58,7 +58,7 @@ run_nnequiv(){
 	
 	{
 		cd $nnequiv_outDir
-		runlim -r $TO -s $MO python $NNEQUIVPATH/examples/equiv/test.py $nnequiv_input1 $nnequiv_input2 $4 $5
+		runlim -r $TO -s $MO python $NNEQUIVPATH/examples/equiv/test.py $nnequiv_input1 $nnequiv_input2 $4 $5 $6
 	} > $nnequiv_outDir/stdout.log 2> $nnequiv_outDir/stderr.log
 	cp $nnequiv_outDir/* "$nnequiv_resultDir"
 	chmod -R a+rwx "$nnequiv_resultDir"
@@ -70,12 +70,12 @@ exec_bench(){
 	inputFile1=`pwd`/benchmarks/$1
 	inputFile2=`pwd`/benchmarks/$1-mirror
 	
-	resultDirOverall=`pwd`"/results/$1-$2-$3/"
+	resultDirOverall=`pwd`"/results/$1-$2-$3-$4/"
 	mkdir -p $resultDirOverall
 
 	for ((num=1;num<=RUN_COUNT;num++)); do
 		echo "Run $num"
-		run_nnequiv "$resultDirOverall/$num" $inputFile1 $inputFile2 $2 $3
+		run_nnequiv "$resultDirOverall/$num" $inputFile1 $inputFile2 $2 $3 $4
 	done
 	chmod -R a+rwx $resultDirOverall
 }
@@ -86,7 +86,7 @@ echo "Preparing NNEquiv..."
 source $EXPERIMENT_DIR/nnequiv/setup.sh $NNEQUIV_COMMIT
 cd $EXPERIMENT_DIR
 echo "Reading benchmark instances from $1"
-while read bench arg1 arg2; do
+while read bench arg1 arg2 arg3; do
 	echo $bench
-	exec_bench $bench $arg1 $arg2
+	exec_bench $bench $arg1 $arg2 $arg3
 done < $INSTANCES
