@@ -6,3 +6,5 @@ mnist8x8_student_24_12_10,9100.5,top
 mnist8x8_student_36_10,9100.5,top
 mnist8x8_student_12_12_12_10,9001,top
 mnist8x8_student_12_12_12_10,9101,top
+mnist8x8_100_80_60_40_20_10,9000.5,top
+mnist8x8_100_80_60_40_20_10,9100.5,top
