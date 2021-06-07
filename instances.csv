@@ -1,3 +1,11 @@
+mnist8x8_student_12_12_12_10,9001,top,REFINE_UNTIL_LAST
+mnist8x8_student_12_12_12_10,9101,top,REFINE_UNTIL_LAST
+mnist8x8_student_12_12_12_10,9001,top,REFINE_UNTIL_MAX
+mnist8x8_student_12_12_12_10,9101,top,REFINE_UNTIL_MAX
+mnist8x8_student_12_12_12_10,9001,top,DONT
+mnist8x8_student_12_12_12_10,9101,top,DONT
+mnist8x8_student_12_12_12_10,9001,top,CEGAR
+mnist8x8_student_12_12_12_10,9101,top,CEGAR
 HAR-trunc,1000.1,0.25,DONT
 mnist_relu_3_100-trunc,400.1,0.25,DONT
 HAR-trunc,1000.1,0.25,CEGAR
