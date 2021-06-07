@@ -39,6 +39,37 @@ class DepthLine(LineHandler):
                     strcache=""
         return np.array(rv)
 
+class ExactCounterLine(LineHandler):
+    def __init__(self, run):
+        super().__init__("exact_counter", run)
+        self.exact_counter_results = None
+
+    def handle(self,line):
+        if line.startswith("[EXACT_COUNTERS]"):
+            print("Handling ExactCounterLine (may take some time)",flush=True)
+            self.exact_counter_results=self.parseList(line[17:])
+    
+    def parseList(self, str):
+        rv = []
+        tuplecache=[]
+        strcache=""
+        active=False
+        for x in str:
+            if x=='[':
+                active=True
+            elif active:
+                if x.isdigit():
+                    strcache+=x
+                elif x==',' and len(strcache)>0:
+                    tuplecache.append(int(strcache))
+                    strcache=""
+                elif x==')':
+                    tuplecache.append(int(strcache))
+                    rv.append((tuplecache[0],tuplecache[1], tuplecache[2]))
+                    strcache=""
+                    tuplecache=[]
+        return np.array(rv)
+
 class DepthOffsetLine(LineHandler):
     def __init__(self,run):
         super().__init__("depth_offset",run)
