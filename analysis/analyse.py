@@ -45,3 +45,37 @@ class RunlimComparator:
 					rv.append('font-weight: bold')
 			return rv
 		return data.style.apply(highlight_min,axis=1)
+
+class RunlimMultiComparator:
+	def __init__(self, runs, labels, benchmarks):
+		self.runs = runs
+		self.labels = labels
+		self.benchmarks = benchmarks
+	
+	def get_data(self, attr):
+		assert attr in ["status", "real", "time", "space"]
+		data = []
+		for b in self.benchmarks:
+			cur_row = [None]*(len(self.runs)+1)
+			cur_row[0]=b
+			for i, run in enumerate(self.runs):
+				if run[b] is not None:
+					cur_row[i+1] = getattr(run[b].runlim, attr)
+				else:
+					cur_row[i+1] = None
+			data.append(cur_row)
+		return pd.DataFrame(data, columns=["Name"] + self.labels)
+	
+	def render_table(self, attr):
+		print(f"Table for {attr}")
+		data = self.get_data(attr)
+		def highlight_min(x):
+			rv = ['']
+			min_val = min(x[1:])
+			for i in range(1,len(x)):
+				if x[i]==min_val:
+					rv.append('font-weight: bold')
+				else:
+					rv.append('')
+			return rv
+		return data.style.apply(highlight_min,axis=1)
