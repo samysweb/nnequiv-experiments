@@ -86,7 +86,10 @@ echo "Preparing NNEquiv..."
 source $EXPERIMENT_DIR/nnequiv/setup.sh $NNEQUIV_COMMIT
 cd $EXPERIMENT_DIR
 echo "Reading benchmark instances from $1"
-while read bench arg1 arg2 arg3; do
+while read bench arg1 arg2; do
 	echo $bench
-	exec_bench $bench $arg1 $arg2 $arg3
+	exec_bench $bench $arg1 $arg2 "REFINE_UNTIL_LAST_OPTIMISTIC1"
+	exec_bench $bench $arg1 $arg2 "REFINE_UNTIL_LAST"
+	exec_bench $bench $arg1 $arg2 "REFINE_UNTIL_MAX"
+	exec_bench $bench $arg1 $arg2 "DONT"
 done < $INSTANCES
