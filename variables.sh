@@ -10,8 +10,8 @@ INSTANCES_BUENING=instances-buening.csv
 RUN_COUNT=1
 
 # NNEquiv Commit
-NNEQUIV_COMMIT="2afb4f8"
-BUENING_COMMIT="a5c91be"
+NNEQUIV_COMMIT="02b650d"
+BUENING_COMMIT="0badb2c" # speedup branch
 
 TO=10800
 MO=4096

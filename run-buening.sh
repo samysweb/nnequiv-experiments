@@ -32,7 +32,7 @@ machine_info(){
 	} > "$1" 2>&1
 }
 
-# run_buening resultDirOverall inputFile1 inputFile2 property epsilon
+# run_buening resultDirOverall inputFile1 inputFile2 property epsilon noop?
 run_buening(){
 	cd $EXPERIMENT_DIR_BUENING
 	echo $EXPERIMENT_DIR_BUENING
@@ -63,7 +63,7 @@ run_buening(){
 	
 	{
 		cd $EXPERIMENT_DIR_BUENING
-		PYTHONPATH="$PYTHONPATH:`pwd`/nnequiv-repo/examples/equiv/:`pwd`/NNEquivalence-repo" runlim -r $TO -s $MO python run_buening.py $nnequiv_input1 $nnequiv_input2 $4 $5
+		PYTHONPATH="$PYTHONPATH:`pwd`/nnequiv-repo/examples/equiv/:`pwd`/NNEquivalence-repo" runlim -r $TO -s $MO python run_buening.py $nnequiv_input1 $nnequiv_input2 $4 $5 $6
 	} > $nnequiv_outDir/stdout.log 2> $nnequiv_outDir/stderr.log
 	cp $nnequiv_outDir/* "$nnequiv_resultDir"
 	chmod -R a+rwx "$nnequiv_resultDir"
@@ -75,12 +75,12 @@ exec_bench(){
 	inputFile1=`pwd`/benchmarks/$1
 	inputFile2=`pwd`/benchmarks/$1-mirror
 	
-	resultDirOverall=`pwd`"/results/$1-$2-$3/"
+	resultDirOverall=`pwd`"/results/$1-$2-$3-$4/"
 	mkdir -p $resultDirOverall
 
 	for ((num=1;num<=RUN_COUNT;num++)); do
 		echo "Run $num"
-		run_buening "$resultDirOverall/$num" $inputFile1 $inputFile2 $2 $3
+		run_buening "$resultDirOverall/$num" $inputFile1 $inputFile2 $2 $3 $4
 	done
 	chmod -R a+rwx $resultDirOverall
 }
@@ -98,7 +98,10 @@ cd ../
 echo "Reading benchmark instances from $1"
 while read bench arg1 arg2; do
 	echo $bench
-	exec_bench $bench $arg1 $arg2
+	echo "Normal"
+	exec_bench $bench $arg1 $arg2 ""
+	echo "No Bound Optimization"
+	exec_bench $bench $arg1 $arg2 "noop"
 done < $INSTANCES_BUENING
 
 rm -rf NNEquivalence-repo
