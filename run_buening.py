@@ -13,6 +13,9 @@ test=sys.argv[2]
 
 assert sys.argv[4]=="top"
 mode = 'one_hot_partial_top_1'
+optimize_constraints = True
+if len(sys.argv)>5 and sys.argv[5]=="noop":
+	optimize_constraints = False
 
 enc=Encoder()
 enc.encode_equiv(reference, test, bounds[1], bounds[0], mode)
@@ -22,8 +25,9 @@ radius = abs((bounds[1][0]-bounds[0][0])/2) # Assuming box which is same everywh
 enc.add_input_radius(center,radius,metric='chebyshev')
 print("[PRETTY_PRINT]")
 enc.pretty_print()
-print("[OPTIMIZE_CONSTRAINTS]")
-enc.optimize_constraints()
+if optimize_constraints:
+	print("[OPTIMIZE_CONSTRAINTS]")
+	enc.optimize_constraints()
 model = enc.create_gurobi_model()
 print("[SOLVE]")
 model.optimize()
@@ -33,4 +37,4 @@ print(ins)
 print(calculate_violation(ins, reference, test, top_k=1))
 ins = get_grb_inputs(model, 10)
 print(ins)
-print(compare_outputs(reference, test,ins))
+print(compare_outputs(reference, test,ins, sort=True))
