@@ -79,3 +79,58 @@ class RunlimMultiComparator:
 					rv.append('')
 			return rv
 		return data.style.apply(highlight_min,axis=1)
+
+class ResultRunlimMultiComparator:
+	def __init__(self, runs, labels, benchmarks):
+		self.runs = runs
+		self.labels = labels
+		self.benchmarks = benchmarks
+	
+	def get_data(self, attr):
+		assert attr in ["status", "real", "time", "space"]
+		data = []
+		for b in self.benchmarks:
+			cur_row = [None]*(len(self.runs)+2)
+			cur_row[0]=b
+			init = False
+			equiv = None
+			for cur_run in self.runs:
+				if init is False and cur_run[b] is not None and cur_run[b].result.did_succeed():
+					equiv = cur_run[b].result.is_equiv
+					init=True
+					continue
+				if init\
+					and cur_run[b] is not None\
+					and cur_run[b].result.did_succeed()\
+					and cur_run[b].result.is_equiv != equiv:
+					equiv = None
+			if equiv is None:
+				cur_row[1]="???"
+			elif equiv:
+				cur_row[1]="equiv"
+			else:
+				cur_row[1]="not equiv"
+			for i, run in enumerate(self.runs):
+				if run[b] is not None:
+					if not run[b].result.did_succeed():
+						cur_row[i+2] = f"fail ({run[b].runlim.status})"
+						continue
+					cur_row[i+2] = getattr(run[b].runlim, attr)
+				else:
+					cur_row[i+2] = "???"
+			data.append(cur_row)
+		return pd.DataFrame(data, columns=["Name", "Status"] + self.labels)
+	
+	def render_table(self, attr):
+		print(f"Table for {attr}")
+		data = self.get_data(attr)
+		def highlight_min(x):
+			rv = ['','']
+			min_val = min([val if isinstance(val,float) else float('inf') for val in x[1:]])
+			for i in range(2,len(x)):
+				if x[i]==min_val:
+					rv.append('font-weight: bold')
+				else:
+					rv.append('')
+			return rv
+		return data.style.apply(highlight_min,axis=1)

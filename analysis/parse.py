@@ -159,24 +159,113 @@ class RunLim(LineHandler):
         except Exception:
             print("Could not parse "+content+" - parts: "+str(parts))
 
+class NNEquivSplitsHandler(LineHandler):
+    def __init__(self, run):
+        super().__init__("split", run)
+        self.split_positions = {}
+    
+    def handle(self,line):
+        if line.startswith('[SPLIT_POINTS]'):
+            self.parseList(line[15:])
+    
+    def parseList(self, str):
+        tuplecache=[]
+        strcache=""
+        active=False
+        for x in str:
+            if x=='[':
+                active=True
+            elif active:
+                if x.isdigit():
+                    strcache+=x
+                elif x==',' and len(strcache)>0:
+                    tuplecache.append(int(strcache))
+                    strcache=""
+                elif x==')':
+                    tuplecache.append(int(strcache))
+                    pos = (tuplecache[0],tuplecache[1],tuplecache[2])
+                    if pos in self.split_positions:
+                        self.split_positions[pos]+=1
+                    else:
+                        self.split_positions[pos]=1
+                    strcache=""
+                    tuplecache=[]
+
+
+class NNEquivResultHandler(LineHandler):
+    def __init__(self,run):
+        super().__init__("result",run)
+        self.status = None
+        self.finished = False
+        self.is_equiv = True
+    
+    def did_succeed(self):
+        return self.status=="ok" and self.finished
+    
+    def handle(self,line, out=None):
+        assert out is not None
+        if out=="stdout":
+            if line.startswith('\033[') and "calls" in line:
+                # Timer was printed
+                self.finished=True
+            if line.startswith('[NEQUIV]'):
+                self.is_equiv=False
+        elif out=="stderr":
+            if not line.startswith("[runlim]"):
+                return
+            content = line[9:]
+            parts = re.split('\s+', content)
+            if content.startswith("status:"):
+                self.status=parts[1].strip()
+
+class BueningResultHandler(LineHandler):
+    BOUND_THRESHOLD = 1e-8
+    def __init__(self,run):
+        super().__init__("result",run)
+        self.status = None
+        self.is_equiv = True
+    
+    def did_succeed(self):
+        return self.status=="ok"
+    
+    def handle(self,line, out=None):
+        assert out is not None
+        if out=="stdout":
+            if line.startswith('Best objective '):
+                split_line = line.split(",")[0].split(" ")
+                bound = float(split_line[2])
+                if bound > BueningResultHandler.BOUND_THRESHOLD:
+                    self.is_equiv = False
+        elif out=="stderr":
+            if not line.startswith("[runlim]"):
+                return
+            content = line[9:]
+            parts = re.split('\s+', content)
+            if content.startswith("status:"):
+                self.status=parts[1].strip()
         
 
 class BenchmarkRun:
     OUT_HANDLERS = [DepthLine, EquivLine, DepthOffsetLine]
     ERR_HANDLERS = [RunLim]
-    def __init__(self, stdout, stderr, out_handlers=OUT_HANDLERS, err_handlers=ERR_HANDLERS):
+    def __init__(self, stdout, stderr, out_handlers=OUT_HANDLERS, err_handlers=ERR_HANDLERS, both_handlers=[]):
         self.stdout_handlers = []
         self.stderr_handlers = []
+        self.both_handlers = []
         for h in out_handlers:
             self.stdout_handlers.append(h(self))
         for h in err_handlers:
             self.stderr_handlers.append(h(self))
-        self.process(stdout,self.stdout_handlers)
-        self.process(stderr,self.stderr_handlers)
+        for h in both_handlers:
+            self.both_handlers.append(h(self))
+        self.process(stdout,self.stdout_handlers, "stdout")
+        self.process(stderr,self.stderr_handlers, "stderr")
     
-    def process(self, file, handlers):
+    def process(self, file, handlers, out):
         with open(file,"r") as f:
             for line in f:
                 trueline = line.strip()
                 for h in handlers:
                     h.handle(trueline)
+                for h in self.both_handlers:
+                    h.handle(trueline, out=out)
