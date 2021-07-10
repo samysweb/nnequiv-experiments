@@ -59,6 +59,7 @@ run_nnequiv(){
 	machine_info "$nnequiv_resultDir/init.log" $VAR_PATH
 	{
 		cd $nnequiv_resultDir
+		export OMP_NUM_THREADS=1
 		runlim -r $TO -s $MO python $NNEQUIVPATH/examples/equiv/test.py $nnequiv_input1 $nnequiv_input2 $4 $5 $6
 	} > $nnequiv_resultDir/stdout.log 2> $nnequiv_resultDir/stderr.log
 	chmod -R a+rwx "$nnequiv_resultDir"
