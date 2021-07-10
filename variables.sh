@@ -21,4 +21,4 @@ NNEQUIV_COMMIT="fc77d23"
 BUENING_COMMIT="04f3bfb" # speedup branch (modified for ONNX Parsing)
 
 TO=10800
-MO=4096
+MO=2048
