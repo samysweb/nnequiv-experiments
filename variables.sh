@@ -14,10 +14,10 @@ INSTANCES=instances-versions.csv
 INSTANCES_BUENING=instances-buening.csv
 
 # How often are benchmarks run?
-RUN_COUNT=1
+RUN_COUNT=3
 
 # NNEquiv Commit
-NNEQUIV_COMMIT="fc77d23"
+NNEQUIV_COMMIT="7417a86"
 BUENING_COMMIT="04f3bfb" # speedup branch (modified for ONNX Parsing)
 
 TO=10800
