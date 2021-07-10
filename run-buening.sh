@@ -57,17 +57,15 @@ run_buening(){
 		return;
 	fi
 	mkdir -p "$nnequiv_resultDir"
-	rm -rf "$TMPDIR/*"
-	nnequiv_outDir=$TMPDIR
 
 	# Write out machine info and initialize nnequiv with right commit
-	machine_info "$nnequiv_outDir/init.log"
+	machine_info "$nnequiv_resultDir/init.log"
 	
 	{
 		cd $EXPERIMENT_DIR_BUENING
 		PYTHONPATH="$PYTHONPATH:`pwd`/nnequiv-repo/examples/equiv/:`pwd`/NNEquivalence-repo" runlim -r $TO -s $MO python run_buening.py $nnequiv_input1 $nnequiv_input2 $4 $5 $6
-	} > $nnequiv_outDir/stdout.log 2> $nnequiv_outDir/stderr.log
-	cp $nnequiv_outDir/* "$nnequiv_resultDir"
+	} > $nnequiv_resultDir/stdout.log 2> $nnequiv_resultDir/stderr.log
+	
 	chmod -R a+rwx "$nnequiv_resultDir"
 }
 
