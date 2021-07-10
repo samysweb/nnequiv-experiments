@@ -18,7 +18,7 @@ RUN_COUNT=1
 
 # NNEquiv Commit
 NNEQUIV_COMMIT="fc77d23"
-BUENING_COMMIT="0badb2c" # speedup branch
+BUENING_COMMIT="e4eb142" # speedup branch (modified for ONNX Parsing)
 
 TO=10800
 MO=4096

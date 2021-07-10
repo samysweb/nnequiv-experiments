@@ -3,6 +3,7 @@ source variables.sh
 mkdir -p $TMPDIR
 
 machine_info(){
+	source $EXPERIMENT_DIR_BUENING/variables.sh
 	{
 		echo "******* Variables *******"
 		cat $EXPERIMENT_DIR_BUENING/variables.sh
@@ -35,10 +36,11 @@ machine_info(){
 # run_buening resultDirOverall inputFile1 inputFile2 property epsilon noop?
 run_buening(){
 	cd $EXPERIMENT_DIR_BUENING
+	source $EXPERIMENT_DIR_BUENING/variables.sh
 	echo $EXPERIMENT_DIR_BUENING
 	# Check if files exist
-	nnequiv_input1="$2.h5"
-	nnequiv_input2="$3.h5"
+	nnequiv_input1="$2.onnx"
+	nnequiv_input2="$3.onnx"
 	if [ ! -f "$nnequiv_input1" ]; then
 		echo "File $nnequiv_input1 not found!"
 		exit
@@ -72,22 +74,26 @@ run_buening(){
 exec_bench(){
 	cd $EXPERIMENT_DIR_BUENING
 
-	inputFile1=`pwd`/benchmarks/$1
-	inputFile2=`pwd`/benchmarks/$1-mirror
+	source variables.sh
+	VAR_PATH=`pwd`/variables.sh
+	IFS=","
+	read -r bench input property strategy <<< "$1"
 	
-	resultDirOverall=`pwd`"/results/$1-$2-$3-$4/"
+	inputFile1=`pwd`/benchmarks-versions/$bench
+	inputFile2=`pwd`/benchmarks-versions/$bench-mirror
+	
+	resultDirOverall=`pwd`"/results/$bench-$input-$property-$strategy/"
 	mkdir -p $resultDirOverall
 
 	for ((num=1;num<=RUN_COUNT;num++)); do
 		echo "Run $num"
-		run_buening "$resultDirOverall/$num" $inputFile1 $inputFile2 $2 $3 $4
+		run_buening "$resultDirOverall/$num" $inputFile1 $inputFile2 $input $property $strategy
 	done
 	chmod -R a+rwx $resultDirOverall
 }
 
 
-IFS=","
-git clone https://github.com/phK3/NNEquivalence.git NNEquivalence-repo
+git clone https://github.com/samysweb/NNEquivalence NNEquivalence-repo
 cd ./NNEquivalence-repo
 git checkout $BUENING_COMMIT
 cd ../
@@ -95,14 +101,16 @@ git clone https://github.com/samysweb/nnequiv.git nnequiv-repo
 cd ./nnequiv-repo
 git checkout $NNEQUIV_COMMIT
 cd ../
-echo "Reading benchmark instances from $1"
-while read bench arg1 arg2; do
-	echo $bench
-	echo "Normal"
-	exec_bench $bench $arg1 $arg2 ""
-	echo "No Bound Optimization"
-	exec_bench $bench $arg1 $arg2 "noop"
-done < $INSTANCES_BUENING
+
+cd $EXPERIMENT_DIR_BUENING
+
+export EXPERIMENT_DIR_BUENING
+export -f machine_info
+export -f run_buening
+export -f exec_bench
+
+parallel -j 4 exec_bench :::: $INSTANCES_BUENING
+#op and noop!
 
 rm -rf NNEquivalence-repo
 rm -rf nnequiv-repo
