@@ -1,6 +1,8 @@
 import fileinput
 import json
 import re
+import statistics
+from statistics import StatisticsError
 from ast import literal_eval
 
 import numpy as np
@@ -133,6 +135,17 @@ class EquivSummarizesLine(LineHandler):
                 self.summarized.append(int(line[19:]))
             except ValueError:
                 pass
+        
+class CegarOptimal(LineHandler):
+    def __init__(self, run):
+        super().__init__("cegaropt", run)
+        self.cegar=None
+        self.opt=None
+    def handle(self,line):
+        if line.startswith("[CEGAR_TIME]"):
+            self.cegar = float(line.split(" ")[-1])
+        if line.startswith("[OPTIMAL_TIME]"):
+            self.opt = float(line.split(" ")[-1])
 
 class RunLim(LineHandler):
     def __init__(self,run):
@@ -269,3 +282,22 @@ class BenchmarkRun:
                     h.handle(trueline)
                 for h in self.both_handlers:
                     h.handle(trueline, out=out)
+
+class AggregateRun:
+    def __init__(self, valuelist):
+        self.valuelist=valuelist
+    
+    def get_val(self, attr, strategy='M'):
+        results = []
+        for val in self.valuelist:
+            cached_val = val
+            for a in attr:
+                cached_val=getattr(cached_val,a)
+            results.append(cached_val)
+        if strategy=='M':
+            try:
+                return statistics.median(results)
+            except (StatisticsError, TypeError):
+                return None
+        elif strategy=='A':
+            return results
