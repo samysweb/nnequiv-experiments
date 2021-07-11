@@ -8,10 +8,10 @@ if [[ "$(hostname)" = "hal9000" ]]; then
 	TMPDIR=/tmp/steuber/experiment
 fi
 if [[ "$(hostname)" = "baldur3" ]]; then
-	TMPDIR=/raid/steuber/tmp
+	TMPDIR=/raid/steuber/tmp2
 fi
-INSTANCES=instances-versions.csv
-INSTANCES_BUENING=instances-buening.csv
+INSTANCES=instances-tightness.csv
+INSTANCES_BUENING=instances-tightness-buening.csv
 
 # How often are benchmarks run?
 RUN_COUNT=3
