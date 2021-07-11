@@ -8,16 +8,16 @@ if [[ "$(hostname)" = "hal9000" ]]; then
 	TMPDIR=/tmp/steuber/experiment
 fi
 if [[ "$(hostname)" = "baldur3" ]]; then
-	TMPDIR=/raid/steuber/tmp
+	TMPDIR=/raid/steuber/tmp2
 fi
-INSTANCES=instances-versions.csv
+INSTANCES=instances-tightness.csv
 INSTANCES_BUENING=instances-tightness-buening.csv
 
 # How often are benchmarks run?
 RUN_COUNT=1
 
 # NNEquiv Commit
-NNEQUIV_COMMIT="603dca5"
+NNEQUIV_COMMIT="7417a86"
 BUENING_COMMIT="04f3bfb" # speedup branch (modified for ONNX Parsing)
 
 TO=10800
