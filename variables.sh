@@ -10,14 +10,14 @@ fi
 if [[ "$(hostname)" = "baldur3" ]]; then
 	TMPDIR=/raid/steuber/tmp2
 fi
-INSTANCES=instances-tightness.csv
+INSTANCES=instances-versions.csv
 INSTANCES_BUENING=instances-tightness-buening.csv
 
 # How often are benchmarks run?
 RUN_COUNT=1
 
 # NNEquiv Commit
-NNEQUIV_COMMIT="7417a86"
+NNEQUIV_COMMIT="3ad4254"
 BUENING_COMMIT="04f3bfb" # speedup branch (modified for ONNX Parsing)
 
 TO=10800
