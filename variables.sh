@@ -17,7 +17,7 @@ INSTANCES_BUENING=instances-tightness-buening.csv
 RUN_COUNT=1
 
 # NNEquiv Commit
-NNEQUIV_COMMIT="3ad4254"
+NNEQUIV_COMMIT="fe93551"
 BUENING_COMMIT="04f3bfb" # speedup branch (modified for ONNX Parsing)
 
 TO=10800
