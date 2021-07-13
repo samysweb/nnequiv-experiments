@@ -101,4 +101,4 @@ export -f machine_info
 export -f run_nnequiv
 export -f exec_bench
 
-parallel -j 4 exec_bench :::: $INSTANCES
+parallel -j 8 exec_bench :::: $INSTANCES
