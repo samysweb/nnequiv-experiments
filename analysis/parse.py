@@ -15,6 +15,9 @@ class LineHandler:
     def handle(self, line):
         pass
 
+    def check(self):
+        pass
+
 class DepthLine(LineHandler):
     def __init__(self,run):
         super().__init__("depth",run)
@@ -171,6 +174,11 @@ class RunLim(LineHandler):
                 self.status=parts[1]
         except Exception:
             print("Could not parse "+content+" - parts: "+str(parts))
+    
+    def check(self):
+        if self.real is None or self.time is None or self.space is None or self.status is None:
+            print("Did not get all runlim values!")
+            raise Exception()
 
 class NNEquivSplitsHandler(LineHandler):
     def __init__(self, run):
@@ -273,6 +281,12 @@ class BenchmarkRun:
             self.both_handlers.append(h(self))
         self.process(stdout,self.stdout_handlers, "stdout")
         self.process(stderr,self.stderr_handlers, "stderr")
+        for h in self.stdout_handlers:
+            h.check()
+        for h in self.stderr_handlers:
+            h.check()
+        for h in self.both_handlers:
+            h.check()
     
     def process(self, file, handlers, out):
         with open(file,"r") as f:
