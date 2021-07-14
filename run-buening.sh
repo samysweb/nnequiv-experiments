@@ -107,7 +107,7 @@ export -f machine_info
 export -f run_buening
 export -f exec_bench
 
-parallel -j 4 exec_bench :::: $INSTANCES_BUENING
+parallel -j 8 exec_bench :::: $INSTANCES_BUENING
 #op and noop!
 
 rm -rf NNEquivalence-repo

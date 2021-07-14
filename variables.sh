@@ -14,7 +14,7 @@ INSTANCES=instances-tightness.csv
 INSTANCES_BUENING=instances-tightness-buening.csv
 
 # How often are benchmarks run?
-RUN_COUNT=1
+RUN_COUNT=3
 
 # NNEquiv Commit
 NNEQUIV_COMMIT="3ad4254"
