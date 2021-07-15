@@ -46,11 +46,13 @@ if epsilon is None:
 	#model.setAttribute('ModelSense',-1)
 	# Maximize
 	model.setParam('BestObjStop',eps)
+	model.setParam("Threads", 1)
 else:
 	print(f"Setting BestObjStop to {epsilon+eps}")
 	# Maximize
 	#model.setAttribute('ModelSense',-1)
 	model.setParam('BestObjStop',epsilon+eps)
+	model.setParam("Threads", 1)
 model.optimize()
 print("[RESULTS]")
 ins = get_grb_inputs(model, len(enc.input_layer.invars))
