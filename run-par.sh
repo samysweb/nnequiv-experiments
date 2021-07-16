@@ -80,7 +80,7 @@ exec_bench(){
 	inputFile1=`pwd`/benchmarks-versions/$bench
 	inputFile2=`pwd`/benchmarks-versions/$bench-mirror
 	
-	resultDirOverall=`pwd`"/results/$bench-$input-$property-$strategy/"
+	resultDirOverall=`pwd`"/results-counter/$bench-$input-$property-$strategy/"
 	mkdir -p $resultDirOverall
 	echo "Prepared directory $resultDirOverall, now executing runs..."
 	for ((num=1;num<=RUN_COUNT;num++)); do
