@@ -1,6 +1,8 @@
 # Experiments on `NNEquiv`
 This repository contains the experimental setup for the [NNEquiv tool](https://github.com/samysweb/nnequiv).
 
+An overview on the benchmarks can be found [here](/benchmarks.md)
+
 - The most important benchmarks can be found in `/benchmarks-versions`
 - Information on the construction of these networks can be found in the jupyter notebooks in `/networks`
 - Analyses of the benchmark runs can be found in `/analysis`
