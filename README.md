@@ -16,5 +16,5 @@ If you are interested in the full log files, feel free to reach out.
 
 ## Citation
 If you use this work in your research please:
-- Cite the work by [Stanley Bak on which we base our implementation](https://link.springer.com/chapter/10.1007/978-3-030-53288-8_4)
+- Cite the work by [Stanley Bak et al. on which we base our implementation](https://link.springer.com/chapter/10.1007/978-3-030-53288-8_4)
 - Cite [our work which extends the Geometric Path Enumeration Algorithm to multiple networks](https://ieeexplore.ieee.org/document/9643328)
