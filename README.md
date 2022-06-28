@@ -14,6 +14,7 @@ An overview on the benchmarks can be found [here](/benchmarks.md)
 Unfortunately the full benchmark result logs (usually stored in folders `/result*`) cannot be obtained in the GitHub repo due to GitHub's file size constraints (some of the logs became rather large).
 If you are interested in the full log files, feel free to reach out.
 
-## Further Remarks
-Our work on equivalence verification will hopefully be published in a conference paper at some point in the near future.
-If you want to cite this work in the meantime, please feel free to get in touch.
+## Citation
+If you use this work in your research please:
+- Cite the work by [Stanley Bak on which we base our implementation](https://link.springer.com/chapter/10.1007/978-3-030-53288-8_4)
+- Cite [our work which extends the Geometric Path Enumeration Algorithm to multiple networks](https://ieeexplore.ieee.org/document/9643328)
